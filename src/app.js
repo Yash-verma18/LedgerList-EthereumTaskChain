@@ -93,6 +93,22 @@ App = {
     window.location.reload();
   },
 
+  toggleCompleted: async (e) => {
+    App.setLoading(true);
+    const taskId = e.target.name;
+    console.log("taskId", taskId);
+
+    try {
+      await App.todoList.toggleCompleted(taskId, { from: App.account });
+    } catch (error) {
+      console.error("Error during toggling task:", error);
+    } finally {
+      App.setLoading(false);
+    }
+
+    window.location.reload();
+  },
+
   setLoading: (boolean) => {
     App.loading = boolean;
     const loader = $("#loader");
@@ -128,8 +144,8 @@ App = {
       $newTaskTemplate
         .find("input")
         .prop("name", taskId)
-        .prop("checked", taskCompleted);
-      // .on("click", App.toggleCompleted);
+        .prop("checked", taskCompleted)
+        .on("click", App.toggleCompleted);
 
       // Put the task in the correct list
       if (taskCompleted) {
